@@ -1,0 +1,107 @@
+<html>
+  <head>
+	<title>Realta Logic - Explore the knowledge graph</title>
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-WT69CG6M1S"></script>
+	<script>
+	  window.dataLayer = window.dataLayer || [];
+	  function gtag(){dataLayer.push(arguments);}
+	  gtag('js', new Date());
+
+	  gtag('config', 'G-WT69CG6M1S');
+	</script>
+  
+    <style> body { margin: 0; } </style>
+
+    <script src="//unpkg.com/3d-force-graph"></script>
+  </head>
+
+  <body>
+    <div id="3d-graph"></div>
+
+    <script type="module">
+		
+		
+		const distance = 1200;
+
+		const Graph = ForceGraph3D()
+        (document.getElementById('3d-graph'))
+		
+		fetch("./wip.json")
+		.then( res => res.json())
+		.then( json => {
+			
+			const gData = {
+			nodes: [],
+			links: []
+			};
+		
+			for(var r in json){ 
+				
+				var source = json[r].source;
+				var target = json[r].target;
+				const link = {source:source.id, target:target.id};
+				
+				gData.nodes[source.id] = source;
+				gData.nodes[target.id] = target;
+				gData.links.push(link);
+			}
+			
+			//Re-index nodes array
+			gData.nodes = gData.nodes.filter(val => val);
+			
+			Graph
+            .enableNodeDrag(true)
+            .enableNavigationControls(true)
+            .showNavInfo(true)
+            .cameraPosition({ z: distance })
+			.nodeAutoColorBy("label")
+			.nodeRelSize(6)
+			.nodeColor(n => {
+				switch(n.label)
+				{
+					case "Red":
+						return "#f16667";
+					case "Green":
+						return "#8DCC93";
+					case "Orange":
+						return "#F79767";
+					case "Grey":
+						return "#ffffff";
+					case "Purple":
+						return "#C990C0";
+					case "LightBlue":
+						return "#57C7E3";
+					case "Blue":
+						return "#4C8EDA";
+				}
+			})
+			.graphData(gData);
+
+		})
+		.catch(function (error) {
+			console.log(error);
+		});
+
+		/*let angle = 0;
+		setInterval(() => {
+			Graph.cameraPosition({
+				x: distance * Math.sin(angle),
+				z: distance * Math.cos(angle)
+			});
+		angle += Math.PI / 300;
+		}, 50);*/
+		
+		
+		//Glow Effect
+		/*import { UnrealBloomPass } from '//unpkg.com/three/examples/jsm/postprocessing/UnrealBloomPass.js';
+		
+		const bloomPass = new UnrealBloomPass();
+		bloomPass.strength = 2;
+		bloomPass.radius = 1;
+		bloomPass.threshold = 0.1;
+		Graph.postProcessingComposer().addPass(bloomPass);*/
+
+    </script>
+  </body>
+</html>
