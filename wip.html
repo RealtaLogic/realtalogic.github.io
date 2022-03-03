@@ -22,12 +22,12 @@
     <script type="module">
 		
 		
-		const distance = 1200;
+		const distance = 2000;
 
 		const Graph = ForceGraph3D()
         (document.getElementById('3d-graph'))
 		
-		fetch("./wip.json")
+		fetch("./ddo-v1.json")
 		.then( res => res.json())
 		.then( json => {
 			
@@ -56,7 +56,8 @@
             .showNavInfo(true)
             .cameraPosition({ z: distance })
 			.nodeAutoColorBy("label")
-			.nodeRelSize(6)
+			.nodeRelSize(10)
+			.linkWidth(1)
 			.nodeColor(n => {
 				switch(n.label)
 				{
@@ -74,6 +75,8 @@
 						return "#57C7E3";
 					case "Blue":
 						return "#4C8EDA";
+					case "Yellow":
+							return "#fffa69";
 				}
 			})
 			.graphData(gData);
